@@ -29,7 +29,6 @@ Button:
 	btfss PORTB, 2
 	call All
 	goto Button
-	end
 
 Off:
 	movlw 0
@@ -52,6 +51,10 @@ All:
 Wait:	; wait 250,000 clocks (500 ms)
 	movlw 250
 	movwf CNT0
+
+end
+
+
 	
 	
 
