@@ -1,2 +1,2 @@
-# Embedded Systems
+# ECE 376: Embedded Systems
  
