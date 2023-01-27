@@ -6,7 +6,6 @@
 CNT0 equ 1
 CNT1 equ 2
 CNT2 equ 3
-LED equ 4
 
 ; --- Program ---
 	org 0x800
@@ -119,11 +118,3 @@ OffD:
 
 
 end
-
-
-	
-	
-
-
-
-
