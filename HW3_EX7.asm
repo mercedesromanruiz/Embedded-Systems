@@ -43,7 +43,7 @@ Half:
 	movwf PORTC
 	movlw 255
 	movwf PORTD
-	bcf PORTD, 7
+	call OffD
 	return
 
 All:
@@ -51,10 +51,11 @@ All:
 	movwf PORTC
 	movwf PORTD
 	call OffC
+	call OffD
 	return
 
 Wait:	; --- Wait 500 ms (2,500,000 clocks)
-	movlw 25
+	movlw 50
 	movwf CNT2
 Loop2:
 	movlw 100
@@ -95,6 +96,25 @@ OffC:
 	bcf PORTC, 1
 	call Wait
 	bcf PORTC, 0
+	return
+
+OffD:
+	call Wait
+	bcf PORTD, 7
+	call Wait
+	bcf PORTD, 6
+	call Wait
+	bcf PORTD, 5
+	call Wait
+	bcf PORTD, 4
+	call Wait
+	bcf PORTD, 3
+	call Wait
+	bcf PORTD, 2
+	call Wait
+	bcf PORTD, 1
+	call Wait
+	bcf PORTD, 0
 	return
 
 
