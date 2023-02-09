@@ -11,12 +11,7 @@ void Wait(unsigned int DATA) {
 	}
 }
 
-void Beep(unsigned int FREQ){
-	unsigned char i;
-	i = (i + 1) % FREQ;
-	if(i == 0) PORTC += 1;
-	}	
-}
+
 
 void main(void) {
 	TRISA = 0;
@@ -26,5 +21,13 @@ void main(void) {
 	TRISE = 0;
 	ADCON1 = 0x0F;
 
+	int FREQ = 200;
+	unsigned int N;	
+	N = 10000000 / FREQ;
 	
+	unsigned char i;
+	while(1) {
+		i = (i + 1) % N;
+		if (i == 0) PORTC += 1;
+	}
 }
