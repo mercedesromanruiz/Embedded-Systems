@@ -49,6 +49,7 @@ void main(void) {
 /*
 // --- PART D ---
 	float A, B, C;
+	unsigned char i;
 	A = 3.14159265379;
 	while(1) {
 		i = (i + 1) % 8;
