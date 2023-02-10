@@ -4,14 +4,16 @@ Exercise 2
 */
 #include <pic18.h>
 
-void Wait(unsigned int DATA) {
-	unsigned int i, j;
-	for (i=0; i<DATA; i++) {
-		for (j=0; j<1000; j++);
+
+void Beep(unsigned int FREQ, unsigned int DUR) {
+	unsigned int i, j, k;
+	for (i = 0; i < DUR; i++) {
+		for (j = 0; j < 1000; j++) {
+			i = (i + 1) % 42;
+			if (i == 0) PORTC += 1;
+		}
 	}
 }
-
-
 
 void main(void) {
 	TRISA = 0;
@@ -20,14 +22,7 @@ void main(void) {
 	TRISD = 0;
 	TRISE = 0;
 	ADCON1 = 0x0F;
-
-	int FREQ = 200;
-	unsigned int N;	
-	N = 10000000 / FREQ;
 	
-	unsigned char i;
-	while(1) {
-		i = (i + 1) % N;
-		if (i == 0) PORTC += 1;
-	}
+	Beep(200,100);
+
 }
