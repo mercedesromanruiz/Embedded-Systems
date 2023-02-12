@@ -22,15 +22,15 @@ void main(void) {
 		if(i == 0) PORTC += 1;
 	}
 */ 
-
+/*
 // --- PART B ---
 	unsigned char i;
 	while(1) {
-	i = (i + 1) % 42;
+	i = (i + 1) % 7;
 	if(i == 0) PORTC += 1;
 	}
 
-
+*/
 // --- PART C ---
 /*
 	unsigned long int A, B, C;
