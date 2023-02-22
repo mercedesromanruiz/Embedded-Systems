@@ -1,5 +1,5 @@
 const unsigned char MSG0[20] = "RGB Flashlight  ";
-const unsigned char MSG1[20] = "Brightness: ";
+const unsigned char MSG1[20] = "Brightness:     ";
 unsigned char PIXEL @ 0x000;
 
 #include <pic18.h>
@@ -85,49 +85,57 @@ char ReadKey(void) {
    return(X);
 }
 
-
 void main(void) {
+	TRISA = 0;
+	TRISB = 0xFF;
+	TRISC = 0xFF;
+	TRISD = 0;
+	TRISE = 0;
+	PORTA = 0;
+	PORTB = 0;
+	PORTC = 0;
+	PORTD = 0;
+	PORTE = 0;
+	ADCON1 = 0x0F;	
+	
 	unsigned int i;
-   	unsigned char RED, GREEN, BLUE;
-	int X, TEMP;
+	LCD_Init();
+	TRISD = 0;
+	LCD_Move(0,0); for(i=0; i<20; i++) LCD_Write(MSG0[i]);
+	LCD_Move(1,0); for(i=0; i<20; i++) LCD_Write(MSG1[i]);
 
-   TRISA = 0;
-   TRISB = 0xFF;
-   TRISD = 0;
-   TRISE = 0;
-   TRISA = 0;
-   PORTB = 0xFF;
-   PORTD = 0;
-   PORTE = 0;
-   ADCON1 = 0x0F;
+	unsigned int TEMP, X;
+	unsigned char RED, GREEN, BLUE, COLOR;
+	unsigned int SHOW;
 
-   LCD_Init();                  // initialize the LCD
-   LCD_Move(0,0); for(i=0; i<20; i++) LCD_Write(MSG0[i]);
-   LCD_Move(1,0); for(i=0; i<20; i++) LCD_Write(MSG1[i]);
+	RED = 0;
+	GREEN = 0;
+	BLUE = 0;
 
-   while(1) {
+	while(1) {
 		TEMP = ReadKey();
 		if(TEMP < 10) X = (X*10) + TEMP;
 		if(X > 255) X = 0;
-		if (TEMP == 10) {
+		if(TEMP == 10) {
 			RED = X;
 			GREEN = X;
 			BLUE = X;
+			X = 0;
 		}
-		if(TEMP == 11) {
-			X = X/10;
-		}
+		if (TEMP == 11) X = X/10;
 	
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
-      NeoPixel_Display(RED, GREEN, BLUE);
+		LCD_Move(1,11); LCD_Out(X, 3, 0);
 
-      
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+		NeoPixel_Display(RED, GREEN, BLUE);
+	}
+	
 }
-}
+
 
