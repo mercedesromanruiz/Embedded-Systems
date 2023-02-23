@@ -1,5 +1,4 @@
-const unsigned char MSG0[20] = "RGB Flashlight  ";
-const unsigned char MSG1[20] = "Brightness:     ";
+const unsigned char MSG0[20] = "RGB Color:      ";
 unsigned char PIXEL @ 0x000;
 
 #include <pic18.h>
@@ -64,11 +63,6 @@ char GetKey(void) {
    if (RC5) RESULT = 6;
    if (RC4) RESULT = 9;
    if (RC3) RESULT = 11;
-   if (RB0) RESULT = 12;
-   if (RB1) RESULT = 13;
-   if (RB2) RESULT = 14;
-   if (RB3) RESULT = 15;
-   if (RB4) RESULT = 16;
    PORTC = 0;
    return(RESULT);
 }
@@ -102,29 +96,39 @@ void main(void) {
 	LCD_Init();
 	TRISD = 0;
 	LCD_Move(0,0); for(i=0; i<20; i++) LCD_Write(MSG0[i]);
-	LCD_Move(1,0); for(i=0; i<20; i++) LCD_Write(MSG1[i]);
+
 
 	unsigned int TEMP, X;
 	unsigned char RED, GREEN, BLUE, COLOR;
-	unsigned int SHOW;
+	unsigned int DONE;
 
+	X = 0;
 	RED = 0;
 	GREEN = 0;
 	BLUE = 0;
+	DONE = 0;
 
 	while(1) {
 		TEMP = ReadKey();
 		if(TEMP < 10) X = (X*10) + TEMP;
 		if(X > 255) X = 0;
 		if(TEMP == 10) {
-			RED = X;
-			GREEN = X;
-			BLUE = X;
+			COLOR = X;
 			X = 0;
+			DONE = 1;
 		}
 		if (TEMP == 11) X = X/10;
 	
-		LCD_Move(1,11); LCD_Out(X, 3, 0);
+		while(DONE) {
+			if(RB0) {RED = COLOR, DONE = 0;}
+			if(RB1) {GREEN = COLOR, DONE = 0;}
+			if(RB2) {BLUE = COLOR, DONE = 0;}
+		}
+	
+		LCD_Move(0,11); LCD_Out(X, 3, 0);
+		LCD_Move(1,1); LCD_Out(RED, 3, 0);
+		LCD_Move(1,5); LCD_Out(GREEN, 3, 0);
+		LCD_Move(1,9); LCD_Out(BLUE, 3, 0);
 
 		NeoPixel_Display(RED, GREEN, BLUE);
 		NeoPixel_Display(RED, GREEN, BLUE);
