@@ -28,9 +28,8 @@ void main() {
 	unsigned int i;	
 	unsigned int N, FREQ;
 
-
 	// Initialize Ports
-	TRISA = 0;
+	TRISA = 0xFF;
 	TRISB = 0xFF;
 	TRISC = 0;
 	TRISD = 0;
@@ -67,7 +66,6 @@ void main() {
 	
 	GIE = 1;
 
-
 	LCD_Init();
 	LCD_Move(0,0); for(i = 0; i < 20; i++) LCD_Write(MSG0[i]);
 
@@ -76,7 +74,7 @@ void main() {
 		PR2 = 0.25 * A2D; // PR2 --> 0...256
 		N = 16 * 16 * PR2;
 		FREQ = 10000000 / (2 * N);
-		SCI_Out(FREQ, 5, 2);
+		SCI_Out(PR2, 5, 2);
 		SCI_CRLF();
 		LCD_Move(1,0); LCD_Out(FREQ, 5, 2);
 	}
