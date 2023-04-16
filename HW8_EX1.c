@@ -18,7 +18,7 @@ void CheckButton() {
 
 void interrupt IntServe(void) {
 	if (TMR2IF) {
-		RA1 = !RA1;
+		RC0 = !RC0;
 		if (TIME != 0) TIME = TIME - 1;
 		TMR2IF = 0;
 	}

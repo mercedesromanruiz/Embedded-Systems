@@ -12,14 +12,14 @@ void interrupt IntServe() {
 		TMR0 = -50000 + 50;
 		if(TOTALSTEPS != 0) {
 			STEP = STEP + 1;
-			PORTC = TABLE[STEP % 4];
+			PORTC = TABLE[STEP%4];
 			if(STEP%25 == 0) BEEP = 100;
 			TOTALSTEPS = TOTALSTEPS - 1;
 		}
 		TMR0IF = 0;
 	}
 	if(TMR1IF) {
-		TMR1 = -1 + 50;
+		TMR1 = -10000;
 		TIME = TIME + 0x10000;
 		TMR1IF = 0;
 	}
@@ -28,8 +28,8 @@ void interrupt IntServe() {
 		TMR2IF = 0;
 	}
 	if(TMR3IF) {
-		TMR3 = - 28635 + 50;
-		if(BEEP!=0) RC4  = !RC4;
+		TMR3 = -28635 + 50;
+		if(BEEP!=0) RC4 = !RC4;
 		TMR3IF = 0;
 	}
 }
@@ -50,10 +50,12 @@ void main() {
 	LCD_Init();
 	LCD_Move(0,0); for(i=0; i<20; i++) LCD_Write(MSG0[i]);
 	LCD_Move(1,0); for(i=0; i<20; i++) LCD_Write(MSG1[i]);
-	
+	Wait_ms(1000);
+	LCD_Inst(1);
+
 	// TIMER0 10ms
 	T0CS = 0;
-	T0CON = 0x81;
+	T0CON = 0x88;
 	TMR0ON = 1;
 	TMR0IE = 1;
 	TMR0IP = 1;
@@ -61,7 +63,7 @@ void main() {
 
 	// TIMER1 100ns
 	TMR1CS = 0;
-	T1CON = 0x88;
+	T1CON = 0x81;
 	TMR1ON = 1;
 	TMR1IE = 1;
 	TMR1IP = 1;
@@ -91,15 +93,12 @@ void main() {
 	BEEP = 0;
 
 	while(1) {
-
 		if(RB0) {
-			LCD_Inst(1);
 			N = TMR1 % 8;
 			TOTALSTEPS = 600 + 25 * N;
 		}		
-
-		LCD_Move(1,0); LCD_Out(TIME, 10, 7);
 		WIN = (STEP % 200) % 8;
-		LCD_Move(0,0); LCD_Out(WIN, 2, 0);
+		LCD_Move(0,0); LCD_Out(WIN, 2, 0);	
+		LCD_Move(1,0); LCD_Out(TIME, 10, 7);
 	}
 }
