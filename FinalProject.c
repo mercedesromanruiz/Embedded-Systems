@@ -2,12 +2,14 @@
 #include "LCD_PortD.c"
 
 const unsigned char MSG0[20] = "FinalProject.c      ";
+const unsigned char MSG1[20] = "Timer2 B Value      ";
+unsigned int PLAY;
 
 void interrupt IntServe() {
 	if(TMR2IF) {
-		if(RB0) RC0 = !RC0;
+		if(PLAY) RC0 = !RC0;
 		else RC0 = 0;
-		TMR2IP = 0;
+		TMR2IF = 0;
 	}
 }
 
@@ -26,7 +28,7 @@ unsigned int A2D_Read(unsigned char c) {
 void main() {
 	int A2D;
 	unsigned int i;	
-	unsigned int N, FREQ;
+	PLAY = 0;
 
 	// Initialize Ports
 	TRISA = 0xFF;
@@ -68,14 +70,21 @@ void main() {
 
 	LCD_Init();
 	LCD_Move(0,0); for(i = 0; i < 20; i++) LCD_Write(MSG0[i]);
+	Wait_ms(1000);
+	LCD_Inst(1);
+	
+	LCD_Move(0,0); for(i = 0; i < 20; i++) LCD_Write(MSG1[i]);
 
 	while(1) {
 		A2D = A2D_Read(0);
-		PR2 = 0.25 * A2D; // PR2 --> 0...256
-		N = 16 * 16 * PR2;
-		FREQ = 10000000 / (2 * N);
-		SCI_Out(PR2, 5, 2);
-		SCI_CRLF();
-		LCD_Move(1,0); LCD_Out(FREQ, 5, 2);
+		PR2 = (0.25 * A2D) + 1; // A2D --> 0...255 --> PR2 --> 1...256
+
+		if(RB1) {
+			SCI_Out(PR2, 5, 0); 
+			SCI_CRLF();
+		}
+		if(RB0) PLAY = !PLAY;
+		
+		LCD_Move(1,0); LCD_Out(PR2, 5, 0);
 	}
 }
